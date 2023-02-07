@@ -1,16 +1,32 @@
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const cors = require("cors");
+const dbConfig = require("./config/db.config.js");
+const cookieParser = require('cookie-parser');
+
 const blogRoutes = require('./routes/blogRoutes');
+const ticketRoutes = require('./routes/ticketRoutes');
+const authRoutes = require('./routes/authRoutes');
+
+// custom middlewares
+const { requireAuth, checkUser } = require('./middleware/authMiddleware');
 
 // express app
 const app = express();
+// set port, listen for requests
+const PORT = process.env.PORT || 3000;
+app.use(express.json());
+app.use(cookieParser());
 
 // connect to mongodb & listen for requests
-const dbURI = "mongodb+srv://odda251:password1234@cluster0.dk2h4uv.mongodb.net/blog";
+const dbURI = dbConfig.url;
 
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(result => app.listen(3000))
+  .then( () =>{
+    app.listen(PORT)
+    console.log(`Server running on port ${PORT}`)
+  })
   .catch(err => console.log(err));
 
 // register view engine
@@ -25,17 +41,26 @@ app.use((req, res, next) => {
   next();
 });
 
+var corsOptions = {
+  origin: "http://localhost:8081"
+};
+
+app.use(cors(corsOptions));
+
 // routes
+app.get('*', checkUser);
 app.get('/', (req, res) => {
   res.redirect('/blogs');
 });
 
-app.get('/about', (req, res) => {
+app.get('/about', requireAuth, (req, res) => {
   res.render('about', { title: 'About' });
 });
 
-// blog routes
+
 app.use('/blogs', blogRoutes);
+app.use('/tickets', requireAuth, ticketRoutes);
+app.use(authRoutes);
 
 // 404 page
 app.use((req, res) => {

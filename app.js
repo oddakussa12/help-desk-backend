@@ -12,6 +12,7 @@ const ticketRoutes = require('./routes/ticketRoutes');
 const authRoutes = require('./routes/authRoutes');
 const ticketStatusRoutes = require('./routes/ticketStatusRoutes');
 const supportLevelRoutes = require('./routes/supportLevelRoutes');
+const faqRoutes = require('./routes/faqRoutes');
 
 // custom middlewares
 const { requireAuth, checkUser } = require('./middleware/authMiddleware');
@@ -67,6 +68,7 @@ app.use('/tickets', requireAuth, ticketRoutes);
 app.use(authRoutes);
 app.use('/ticket-status', ticketStatusRoutes);
 app.use('/support-level', supportLevelRoutes);
+app.use('/faq', faqRoutes);
 
 // 404 page
 app.use((req, res) => {

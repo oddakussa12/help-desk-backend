@@ -21,22 +21,24 @@ const requireAuth = (req, res, next) => {
 }
 
 const checkUser = (req, res, next) => {
-    const token = req.cookies.jwt;
-    if(token){
+    const authToken = req.headers.authorization;
+    if(authToken){
+        const token = authToken.split(" ")[1];
+
         jwt.verify(token, 'help desk secret', async (err, decodedToken) => {
             if(err){
                 console.log(err.message);
                 res.locals.user = null;
                 next();
             }else{
-                console.log(decodedToken)
+                // console.log(decodedToken)
                 let user = await User.findById(decodedToken.id);
+
                 res.locals.user = user;
                 next();
             }
         })
-    }
-    else{
+    }else{
         res.locals.user = null;
         next();
     }

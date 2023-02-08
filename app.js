@@ -66,7 +66,7 @@ app.get('/about', requireAuth, (req, res) => {
 
 
 app.use('/blogs', blogRoutes);
-app.use('/tickets', requireAuth, ticketRoutes);
+app.use('/tickets', requireAuth,checkUser, ticketRoutes);
 app.use(authRoutes);
 app.use('/ticket-status', ticketStatusRoutes);
 app.use('/support-level', supportLevelRoutes);

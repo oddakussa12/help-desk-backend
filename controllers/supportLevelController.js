@@ -1,7 +1,7 @@
-const TicketStatus = require('../models/TicketStatus');
+const SupportLevel = require('../models/SupportLevel');
 
 const index = (req, res) => {
-    TicketStatus.find().sort({ createdAt: -1 })
+    SupportLevel.find().sort({ createdAt: -1 })
     .then(result => {
       res.json(result);
     })
@@ -11,35 +11,34 @@ const index = (req, res) => {
 }
 
 const store = async(req, res) => {
-  const ticketStstus = new TicketStatus({
+  const supportLevel = new SupportLevel({
     name: req.body.name,
   });
   
   try{
-    const result = await ticketStstus.save();
+    const result = await supportLevel.save();
     res.json(result);
   }catch(err){
     res.status(500).send({error: 'Error ' +err })
   }
 }
 
-
 const update = (req, res) => {
     if (req.body.constructor === Object && Object.keys(req.body).length !== 0) {
 
         const id = req.params.id;
 
-        TicketStatus.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
+        SupportLevel.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
         .then(data => {
             if (!data) {
                 res.status(404).json({
-                  message: `Cannot update ticket status with id=${id}. Maybe it was not found!`
+                  message: `Cannot update support level with id=${id}. Maybe it was not found!`
                 });
             } else res.send({ message: "Updated successfully." });
         })
         .catch(err => {
             res.status(500).json({
-                message: "Error updating ticket status with id=" + id
+                message: "Error updating support level with id=" + id
             });
         });
     }else{
@@ -51,11 +50,11 @@ const update = (req, res) => {
 
 const destroy = (req, res) => {
   const id = req.params.id;
-  TicketStatus.findByIdAndDelete(id)
+  SupportLevel.findByIdAndDelete(id)
     .then(result => {
         if (!result) {
             res.status(404).json({
-              message: `Cannot delete ticket status with id=${id}. Maybe it was not found!`
+              message: `Cannot delete support level with id=${id}. Maybe it was not found!`
             });
         } else res.json({ message: "Delete successfully." });
     })

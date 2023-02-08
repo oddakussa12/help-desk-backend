@@ -1,3 +1,5 @@
+const dotenv = require('dotenv');
+dotenv.config({ path: '.env' });
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
@@ -8,6 +10,7 @@ const cookieParser = require('cookie-parser');
 const blogRoutes = require('./routes/blogRoutes');
 const ticketRoutes = require('./routes/ticketRoutes');
 const authRoutes = require('./routes/authRoutes');
+const ticketStatusRoutes = require('./routes/ticketStatusRoutes');
 
 // custom middlewares
 const { requireAuth, checkUser } = require('./middleware/authMiddleware');
@@ -15,7 +18,7 @@ const { requireAuth, checkUser } = require('./middleware/authMiddleware');
 // express app
 const app = express();
 // set port, listen for requests
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 app.use(express.json());
 app.use(cookieParser());
 
@@ -61,6 +64,7 @@ app.get('/about', requireAuth, (req, res) => {
 app.use('/blogs', blogRoutes);
 app.use('/tickets', requireAuth, ticketRoutes);
 app.use(authRoutes);
+app.use('/ticket-status', ticketStatusRoutes);
 
 // 404 page
 app.use((req, res) => {

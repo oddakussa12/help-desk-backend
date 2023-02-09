@@ -13,12 +13,12 @@ const ComplainSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Ticket ID is required'],
   },
-  user_id: {
+  created_by: {
     type: String,
     required: [true, 'User Id is required'],
   },
 
-});
+}, { timestamps: true });
 
 const Complain = mongoose.model('Complain', ComplainSchema);
 

@@ -6,7 +6,7 @@ const SupportLevelSchema = new mongoose.Schema({
     required: [true, 'Please enter level name'],
     unique: true,
   }
-});
+}, { timestamps: true });
 
 const SupportLevel = mongoose.model('SupportLevel', SupportLevelSchema);
 

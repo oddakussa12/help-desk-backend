@@ -6,7 +6,7 @@ const TicketStatusSchema = new mongoose.Schema({
     required: [true, 'Please enter ticket status name'],
     unique: true,
   }
-});
+}, { timestamps: true });
 
 const TicketStatus = mongoose.model('TicketStatus', TicketStatusSchema);
 

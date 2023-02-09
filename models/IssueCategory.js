@@ -5,7 +5,7 @@ const IssueCategorySchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please enter the name'],
   },
-});
+}, { timestamps: true });
 
 const IssueCategory = mongoose.model('IssueCategory', IssueCategorySchema);
 

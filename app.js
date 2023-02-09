@@ -15,6 +15,8 @@ const supportLevelRoutes = require('./routes/supportLevelRoutes');
 const faqRoutes = require('./routes/faqRoutes');
 const issueCategoryRoutes = require('./routes/issueCategoryRoutes');
 const complainRoutes = require('./routes/complainRoutes');
+const userRoutes = require('./routes/userRoutes');
+const roleRoutes = require('./routes/roleRoutes');
 
 // custom middlewares
 const { requireAuth, checkUser } = require('./middleware/authMiddleware');
@@ -73,6 +75,8 @@ app.use('/support-level', supportLevelRoutes);
 app.use('/faq', faqRoutes);
 app.use('/issue-category', issueCategoryRoutes);
 app.use('/complains', complainRoutes);
+app.use('/users', requireAuth, userRoutes);
+app.use('/roles', requireAuth, roleRoutes);
 
 // 404 page
 app.use((req, res) => {

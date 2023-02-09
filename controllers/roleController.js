@@ -1,7 +1,7 @@
-const Complain = require('../models/Complain');
+const Role = require('../models/Role');
 
 const index = (req, res) => {
-    Complain.find().sort({ createdAt: -1 })
+    Role.find().sort({ createdAt: -1 })
     .then(result => {
       res.json(result);
     })
@@ -10,31 +10,13 @@ const index = (req, res) => {
     });
 }
 
-const show = (req, res) => {
-    const id = req.params.id;
-    Complain.findById(id)
-      .then(result => {
-        if(!result){
-            res.json({message: "No complain found with given id"});
-        }else{
-            res.json(result);
-        }
-      })
-      .catch(err => {
-        res.status(404).json({ Error: err });
-      });
-  }
-
 const store = async(req, res) => {
-  const complain = new Complain({
-    title: req.body.title,
-    description: req.body.description,
-    ticket_id: req.body.ticket_id,
-    created_by: req.body.created_by,
+  const role = new Role({
+    name: req.body.name,
   });
   
   try{
-    const result = await complain.save();
+    const result = await role.save();
     res.json(result);
   }catch(err){
     res.status(500).send({error: 'Error ' +err })
@@ -46,17 +28,17 @@ const update = (req, res) => {
 
         const id = req.params.id;
 
-        Complain.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
+        Role.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
         .then(data => {
             if (!data) {
                 res.status(404).json({
-                  message: `Cannot update complain with id=${id}. Maybe it was not found!`
+                  message: `Cannot update role with id=${id}. Maybe it was not found!`
                 });
             } else res.send({ message: "Updated successfully." });
         })
         .catch(err => {
             res.status(500).json({
-                message: "Error updating Complain with id=" + id
+                message: "Error updating role with id=" + id
             });
         });
     }else{
@@ -68,11 +50,11 @@ const update = (req, res) => {
 
 const destroy = (req, res) => {
   const id = req.params.id;
-  Complain.findByIdAndDelete(id)
+  Role.findByIdAndDelete(id)
     .then(result => {
         if (!result) {
             res.status(404).json({
-              message: `Cannot delete complain with id=${id}. Maybe it was not found!`
+              message: `Cannot delete Role with id=${id}. Maybe it was not found!`
             });
         } else res.json({ message: "Delete successfully." });
     })
@@ -83,7 +65,6 @@ const destroy = (req, res) => {
 
 module.exports = {
   index,
-  show,
   store, 
   update,
   destroy

@@ -17,6 +17,7 @@ const issueCategoryRoutes = require('./routes/issueCategoryRoutes');
 const complainRoutes = require('./routes/complainRoutes');
 const userRoutes = require('./routes/userRoutes');
 const roleRoutes = require('./routes/roleRoutes');
+const ticketPriority = require('./routes/ticketPriorityRoutes');
 
 // custom middlewares
 const { requireAuth, checkUser } = require('./middleware/authMiddleware');
@@ -77,6 +78,7 @@ app.use('/issue-category', issueCategoryRoutes);
 app.use('/complains', complainRoutes);
 app.use('/users', requireAuth, userRoutes);
 app.use('/roles', requireAuth, roleRoutes);
+app.use('/ticket-priority', requireAuth, ticketPriority);
 
 // 404 page
 app.use((req, res) => {

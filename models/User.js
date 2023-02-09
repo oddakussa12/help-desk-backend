@@ -27,6 +27,10 @@ const userSchema = new mongoose.Schema({
     required:true,
     type: mongoose.Schema.Types.ObjectId,
     ref:"Role"
+  },
+  level:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref:"SupportLevel"
   }
 }, { timestamps: true });
 

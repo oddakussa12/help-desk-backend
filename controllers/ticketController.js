@@ -2,7 +2,9 @@ const Ticket = require('../models/ticket');
 const mongoose = require('mongoose');
 
 const ticket_index = (req, res) => {
-    Ticket.find().sort({ createdAt: -1 }).populate('assignee','email').populate('created_by', 'email')
+      Ticket.find().sort({ createdAt: -1 })
+      .populate('assignee','name').populate('created_by', 'name')
+      .populate('status','name').populate('priority', 'name')
     // Ticket.find().sort({ createdAt: -1 })
     .then(result => {
       res.json(result);

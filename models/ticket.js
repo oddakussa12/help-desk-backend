@@ -12,8 +12,12 @@ const ticketSchema = new Schema({
     required: true
   },
   status: {
-    type: String,
-    default: "Pending",
+    type: mongoose.Schema.Types.ObjectId,
+    ref:"TicketStatus"
+  },
+  priority: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref:"TicketPriority"
   },
   assignee: {
     type: mongoose.Schema.Types.ObjectId,

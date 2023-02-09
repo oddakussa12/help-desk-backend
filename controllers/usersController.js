@@ -36,7 +36,7 @@ const handleErrors = (err) => {
 }
 
 const index = (req, res) => {
-    User.find().sort({ createdAt: -1 }).populate('role','name')
+    User.find().sort({ createdAt: -1 }).populate('role','name').populate('level','name')
     .then(result => {
       res.json(result);
     })
@@ -46,10 +46,10 @@ const index = (req, res) => {
 }
 
 const store = async(req, res) => {
-  const { name, phone, email, password, role } = req.body;
+  const { name, phone, email, password, role, level } = req.body;
 
   try {
-    const user = await User.create({ name, phone, email, password, role });
+    const user = await User.create({ name, phone, email, password, role, level });
     res.json(user);
   }
   catch(err) {

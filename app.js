@@ -39,11 +39,13 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   })
   .catch(err => console.log(err));
 
-// register view engine
-app.set('view engine', 'ejs');
 
 // middleware & static files
-app.use(express.static('public'));
+app.use('/public',express.static('public'));
+
+
+// register view engine
+app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 app.use((req, res, next) => {
@@ -52,7 +54,8 @@ app.use((req, res, next) => {
 });
 
 var corsOptions = {
-  origin: "http://localhost:8081"
+  origin: "http://localhost:3000",
+  credentials: true 
 };
 
 app.use(cors(corsOptions));
@@ -73,12 +76,12 @@ app.use('/tickets', requireAuth,checkUser, ticketRoutes);
 app.use(authRoutes);
 app.use('/ticket-status', ticketStatusRoutes);
 app.use('/support-level', supportLevelRoutes);
-app.use('/faq', faqRoutes);
+app.use('/faq', checkUser, faqRoutes);
 app.use('/issue-category', issueCategoryRoutes);
 app.use('/complains', complainRoutes);
-app.use('/users', requireAuth, userRoutes);
-app.use('/roles', requireAuth, roleRoutes);
-app.use('/ticket-priority', requireAuth, ticketPriority);
+app.use('/users', userRoutes);
+app.use('/roles', roleRoutes);
+app.use('/ticket-priority', ticketPriority);
 
 // 404 page
 app.use((req, res) => {

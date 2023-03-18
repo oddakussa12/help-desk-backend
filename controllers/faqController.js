@@ -1,7 +1,8 @@
 const FAQ = require('../models/FAQ');
 
 const index = (req, res) => {
-    FAQ.find().sort({ createdAt: -1 })
+    FAQ.find().sort({ createdAt: -1 }).populate({path: 'created_by', select:'name',
+     populate:{path: 'level', select:'name'}})
     .then(result => {
       res.json(result);
     })
@@ -27,8 +28,7 @@ const show = (req, res) => {
 
 const store = async(req, res) => {
   const faq = new FAQ({
-    title: req.body.title,
-    description: req.body.description,
+    ...req.body, created_by:res.locals.user._id
   });
   
   try{

@@ -24,13 +24,18 @@ const userSchema = new mongoose.Schema({
     minlength: [6, 'Minimum password length is 6 characters'],
   },
   role:{
-    required:true,
     type: mongoose.Schema.Types.ObjectId,
-    ref:"Role"
+    ref:"Role",
+    required:true
+
   },
   level:{
     type: mongoose.Schema.Types.ObjectId,
-    ref:"SupportLevel"
+    ref:"SupportLevel",
+    required:false
+  },
+  profile_picture:{
+    type:String,
   }
 }, { timestamps: true });
 
@@ -39,20 +44,23 @@ const userSchema = new mongoose.Schema({
 userSchema.pre('save', async function(next) {
   const salt = await bcrypt.genSalt();
   this.password = await bcrypt.hash(this.password, salt);
+  // set default user role
+  this.role == null ? this.role = '63e4b00845c49269e5de2aa6' : null
   next();
 });
 
 // static method to login user
-userSchema.statics.login = async function(email, password) {
-  const user = await this.findOne({ email });
+userSchema.statics.login = async function(phone_number, password) {
+  const phone = phone_number;
+  const user = await this.findOne({ phone }).populate('role','name');
   if (user) {
     const auth = await bcrypt.compare(password, user.password);
     if (auth) {
       return user;
     }
-    throw Error('incorrect password');
+    throw Error('Incorrect password');
   }
-  throw Error('incorrect email');
+  throw Error('Incorrect phone');
 };
 
 const User = mongoose.model('user', userSchema);

@@ -46,10 +46,14 @@ const index = (req, res) => {
 }
 
 const store = async(req, res) => {
-  const { name, phone, email, password, role, level } = req.body;
+  console.log("this is the body")
+  console.log(req.body);
+  // const user_data =  { ...req.body, profile_picture: process.env.BASE_URL+req.file.path };
+  const user_data =  req.body;
 
   try {
-    const user = await User.create({ name, phone, email, password, role, level });
+    const user = await User.create(user_data);
+    console.log(user);
     res.json(user);
   }
   catch(err) {

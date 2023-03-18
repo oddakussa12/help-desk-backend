@@ -55,12 +55,20 @@ module.exports.signup_post = async (req, res) => {
   const { name, phone, email, password } = req.body;
 
   try {
-    const user = await User.create({ name, phone, email, password });
+    let user = await User.create({ name, phone, email, password });
+    user = await user.populate('role').execPopulate()
+    console.log(user);
     const access_token = createToken(user._id);
     const refresh_token = createRefreshToken(user._id);
     await RefreshToken.create({refresh_token});
     res.cookie('jwt', access_token, { httpOnly: true, maxAge: maxAge * 1000 });
-    res.status(201).json({ user: user._id, access_token:access_token, refresh_token:refresh_token });
+    res.status(201).json({ _id: user._id,
+      name:user.name,
+      email:user.email,
+      phone:user.phone,
+      role:user.role.name,
+      access_token:access_token,
+      refresh_token:refresh_token });
   }
   catch(err) {
     const errors = handleErrors(err);
@@ -70,10 +78,11 @@ module.exports.signup_post = async (req, res) => {
 }
 
 module.exports.login_post = async (req, res) => {
-  const { email, password } = req.body;
+  const { phone_number, password } = req.body;
 
   try {
-    const user = await User.login(email, password);
+    const user = await User.login(phone_number, password);
+    console.log(user);
     const access_token = createToken(user._id);
     const refresh_token = createRefreshToken(user._id);
     await RefreshToken.create({refresh_token});
@@ -82,6 +91,8 @@ module.exports.login_post = async (req, res) => {
        _id: user._id,
        name:user.name,
        email:user.email,
+       phone:user.phone,
+       role:user.role.name,
        access_token:access_token,
        refresh_token:refresh_token
      });

@@ -52,10 +52,10 @@ const createRefreshToken = (id) => {
 // controller actions
 
 module.exports.signup_post = async (req, res) => {
-  const { name, phone, email, password } = req.body;
+  // const { name, phone, email, password } = req.body;
 
   try {
-    let user = await User.create({ name, phone, email, password });
+    let user = await User.create(req.body);
     user = await user.populate('role').execPopulate()
     console.log(user);
     const access_token = createToken(user._id);

@@ -13,6 +13,11 @@ const FAQSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  category_id:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref:"IssueCategory",
+    required:false
+  },
   created_by:{
     type: mongoose.Schema.Types.ObjectId,
     ref:"user"

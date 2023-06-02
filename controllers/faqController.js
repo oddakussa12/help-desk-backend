@@ -104,6 +104,26 @@ const destroy = (req, res) => {
     });
 };
 
+const changeStatus = (req, res) => {
+  const id = req.params.id;
+  
+  FAQ.findById(id, (err, doc) => {
+    if (err) {
+      console.log(err);
+    } else {
+      doc.approved = !doc.approved;
+      doc.save((err, updatedDoc) => {
+        if (err) {
+          res.json("Error: " + err);
+        } else {
+          res.json({ message: "Updated successfully." });
+        }
+      });
+    }
+  });
+  
+};
+
 module.exports = {
   index,
   show,
@@ -111,4 +131,5 @@ module.exports = {
   update,
   destroy,
   faqByCategory,
+  changeStatus,
 };

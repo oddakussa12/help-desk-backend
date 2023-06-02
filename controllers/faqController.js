@@ -34,6 +34,11 @@ const faqByCategory = (req, res) => {
 const show = (req, res) => {
   const id = req.params.id;
   FAQ.findById(id)
+    .populate({
+      path: "created_by",
+      select: "name",
+      populate: { path: "level", select: "name" },
+    })
     .then((result) => {
       if (!result) {
         res.json({ message: "No FAQ found with given id" });

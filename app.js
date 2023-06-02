@@ -75,13 +75,13 @@ app.use('/blogs', blogRoutes);
 app.use('/tickets', requireAuth,checkUser, ticketRoutes);
 app.use(authRoutes);
 app.use('/ticket-status', ticketStatusRoutes);
-app.use('/support-level', supportLevelRoutes);
-app.use('/faq', checkUser, faqRoutes);
+app.use('/api/admin/support-level', supportLevelRoutes);
+app.use('/api/admin/faqs', checkUser, faqRoutes);
 app.use('/issue-category', issueCategoryRoutes);
 app.use('/complains', complainRoutes);
-app.use('/users', userRoutes);
-app.use('/roles', roleRoutes);
-app.use('/ticket-priority', ticketPriority);
+app.use('/api/admin/users', userRoutes);
+app.use('/api/admin/roles', roleRoutes);
+app.use('/api/admin/ticket-priority', ticketPriority);
 
 // 404 page
 app.use((req, res) => {

@@ -72,12 +72,12 @@ app.get('/about', requireAuth, (req, res) => {
 
 
 app.use('/blogs', blogRoutes);
-app.use('/tickets', requireAuth,checkUser, ticketRoutes);
+app.use('/api/user/tickets', requireAuth,checkUser, ticketRoutes);
 app.use(authRoutes);
 app.use('/ticket-status', ticketStatusRoutes);
 app.use('/api/admin/support-level', supportLevelRoutes);
 app.use('/api/admin/faqs', checkUser, faqRoutes);
-app.use('/issue-category', issueCategoryRoutes);
+app.use('/api/admin/issue-category', issueCategoryRoutes);
 app.use('/complains', complainRoutes);
 app.use('/api/admin/users', userRoutes);
 app.use('/api/admin/roles', roleRoutes);

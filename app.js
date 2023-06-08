@@ -1,31 +1,34 @@
-const dotenv = require('dotenv');
-dotenv.config({ path: '.env' });
-const express = require('express');
-const morgan = require('morgan');
-const mongoose = require('mongoose');
+const dotenv = require("dotenv");
+dotenv.config({ path: ".env" });
+const express = require("express");
+const morgan = require("morgan");
+const mongoose = require("mongoose");
 const cors = require("cors");
 const dbConfig = require("./config/db.config.js");
-const cookieParser = require('cookie-parser');
+const cookieParser = require("cookie-parser");
 
 // admin routes
+const adminTicketRoute = require("./routes/admin/ticketRoutes.js");
+const adminRoleRoutes = require("./routes/admin/roleRoutes.js");
+const adminUserRoutes = require("./routes/admin/userRoutes.js");
+const adminTicketStatusRoutes = require("./routes/admin/ticketStatusRoutes.js");
+const adminFaqRoutes = require("./routes/admin/faqRoutes.js");
+const adminSupportLevelRoutes = require("./routes/admin/supportLevelRoutes.js");
+const adminIssueCategoryRoutes = require("./routes/admin/issueCategoryRoutes.js");
 // support user routes
+
 // end user routes
+
+const userTicketRoutes = require("./routes/ticketRoutes");
 // public routes
 
+// auth routes
+const authRoutes = require("./routes/authRoutes");
 
-const ticketRoutes = require('./routes/ticketRoutes');
-const authRoutes = require('./routes/authRoutes');
-const ticketStatusRoutes = require('./routes/ticketStatusRoutes');
-const supportLevelRoutes = require('./routes/supportLevelRoutes');
-const faqRoutes = require('./routes/faqRoutes');
-const issueCategoryRoutes = require('./routes/issueCategoryRoutes');
-const complainRoutes = require('./routes/complainRoutes');
-const userRoutes = require('./routes/userRoutes');
-const roleRoutes = require('./routes/roleRoutes');
-const ticketPriority = require('./routes/ticketPriorityRoutes');
+const ticketPriority = require("./routes/admin/ticketPriorityRoutes.js");
 
 // custom middlewares
-const { requireAuth, checkUser } = require('./middleware/authMiddleware');
+const { requireAuth, checkUser } = require("./middleware/authMiddleware");
 
 // express app
 const app = express();
@@ -37,22 +40,21 @@ app.use(cookieParser());
 // connect to mongodb & listen for requests
 const dbURI = dbConfig.url;
 
-mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then( () =>{
-    app.listen(PORT)
-    console.log(`Server running on port ${PORT}`)
+mongoose
+  .connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    app.listen(PORT);
+    console.log(`Server running on port ${PORT}`);
   })
-  .catch(err => console.log(err));
-
+  .catch((err) => console.log(err));
 
 // middleware & static files
-app.use('/public',express.static('public'));
-
+app.use("/public", express.static("public"));
 
 // register view engine
-app.set('view engine', 'ejs');
+app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
-app.use(morgan('dev'));
+app.use(morgan("dev"));
 app.use((req, res, next) => {
   res.locals.path = req.path;
   next();
@@ -60,26 +62,35 @@ app.use((req, res, next) => {
 
 var corsOptions = {
   origin: "http://localhost:3000",
-  credentials: true 
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
 
-// routes
-app.get('*', checkUser);
+// ENDPOINTS
+// apply checkUser middleware on every route
+app.get("*", checkUser);
 
+// auth endpoints
 app.use(authRoutes);
-app.use('/api/user/tickets', requireAuth,checkUser, ticketRoutes);
-app.use('/ticket-status', ticketStatusRoutes);
-app.use('/api/admin/support-level', supportLevelRoutes);
-app.use('/api/admin/faqs', checkUser, faqRoutes);
-app.use('/api/admin/issue-category', issueCategoryRoutes);
-app.use('/complains', complainRoutes);
-app.use('/api/admin/users', userRoutes);
-app.use('/api/admin/roles', roleRoutes);
-app.use('/api/admin/ticket-priority', ticketPriority);
 
-// 404 page
+// admin endpoints
+app.use("/api/admin/users", adminUserRoutes);
+app.use("/api/admin/roles", adminRoleRoutes);
+app.use("/api/admin/ticket-priority", ticketPriority);
+app.use("/api/admin/support-level", adminSupportLevelRoutes);
+app.use("/api/admin/ticket-status", adminTicketStatusRoutes);
+app.use("/api/admin/issue-category", adminIssueCategoryRoutes);
+app.use("/api/admin/faqs", checkUser, adminFaqRoutes);
+
+// support user endpoints
+
+// end user endpoints
+app.use("/api/user/tickets", requireAuth, checkUser, userTicketRoutes);
+
+// public endpoints
+
+// 404
 app.use((req, res, next) => {
-  res.status(404).json('Sorry, the api you requested does not exist.');
+  res.status(404).json("Sorry, the api you requested does not exist.");
 });

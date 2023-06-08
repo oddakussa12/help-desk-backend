@@ -1,4 +1,4 @@
-const FAQ = require("../models/FAQ");
+const FAQ = require("../../../models/FAQ");
 
 const index = (req, res) => {
   FAQ.find()
@@ -106,7 +106,7 @@ const destroy = (req, res) => {
 
 const changeStatus = (req, res) => {
   const id = req.params.id;
-  
+
   FAQ.findById(id, (err, doc) => {
     if (err) {
       console.log(err);
@@ -121,7 +121,6 @@ const changeStatus = (req, res) => {
       });
     }
   });
-  
 };
 
 module.exports = {

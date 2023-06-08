@@ -8,24 +8,24 @@ const dbConfig = require("./config/db.config.js");
 const cookieParser = require("cookie-parser");
 
 // admin routes
-const adminTicketRoute = require("./routes/admin/ticketRoutes.js");
 const adminRoleRoutes = require("./routes/admin/roleRoutes.js");
-const adminUserRoutes = require("./routes/admin/userRoutes.js");
 const adminTicketStatusRoutes = require("./routes/admin/ticketStatusRoutes.js");
-const adminFaqRoutes = require("./routes/admin/faqRoutes.js");
 const adminSupportLevelRoutes = require("./routes/admin/supportLevelRoutes.js");
 const adminIssueCategoryRoutes = require("./routes/admin/issueCategoryRoutes.js");
+const ticketPriority = require("./routes/admin/ticketPriorityRoutes.js");
+const adminFaqRoutes = require("./routes/admin/faqRoutes.js");
+const adminUserRoutes = require("./routes/admin/userRoutes.js");
+const adminTicketRoute = require("./routes/admin/ticketRoutes.js");
+
 // support user routes
 
 // end user routes
+const userTicketRoutes = require("./routes/user/ticketRoutes.js");
 
-const userTicketRoutes = require("./routes/ticketRoutes");
 // public routes
 
 // auth routes
-const authRoutes = require("./routes/authRoutes");
-
-const ticketPriority = require("./routes/admin/ticketPriorityRoutes.js");
+const authRoutes = require("./routes/auth/authRoutes.js");
 
 // custom middlewares
 const { requireAuth, checkUser } = require("./middleware/authMiddleware");
@@ -68,11 +68,12 @@ var corsOptions = {
 app.use(cors(corsOptions));
 
 // ENDPOINTS
+
 // apply checkUser middleware on every route
 app.get("*", checkUser);
 
 // auth endpoints
-app.use(authRoutes);
+app.use("/api/auth", authRoutes);
 
 // admin endpoints
 app.use("/api/admin/users", adminUserRoutes);
@@ -82,6 +83,7 @@ app.use("/api/admin/support-level", adminSupportLevelRoutes);
 app.use("/api/admin/ticket-status", adminTicketStatusRoutes);
 app.use("/api/admin/issue-category", adminIssueCategoryRoutes);
 app.use("/api/admin/faqs", checkUser, adminFaqRoutes);
+app.use("/api/admin/tickets", checkUser, adminTicketRoute);
 
 // support user endpoints
 

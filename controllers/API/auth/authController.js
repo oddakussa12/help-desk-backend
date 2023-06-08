@@ -1,5 +1,5 @@
-const User = require("../models/User");
-const RefreshToken = require("../models/RefreshToken");
+const User = require("../../../models/User");
+const RefreshToken = require("../../../models/RefreshToken");
 const jwt = require("jsonwebtoken");
 
 // handle errors
@@ -62,17 +62,15 @@ module.exports.signup_post = async (req, res) => {
     const refresh_token = createRefreshToken(user._id);
     await RefreshToken.create({ refresh_token });
     res.cookie("jwt", access_token, { httpOnly: true, maxAge: maxAge * 1000 });
-    res
-      .status(201)
-      .json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        phone: user.phone,
-        role: user.role.name,
-        access_token: access_token,
-        refresh_token: refresh_token,
-      });
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      role: user.role.name,
+      access_token: access_token,
+      refresh_token: refresh_token,
+    });
   } catch (err) {
     const errors = handleErrors(err);
     res.status(400).json({ errors });

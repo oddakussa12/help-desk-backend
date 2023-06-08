@@ -1,4 +1,4 @@
-const Ticket = require("../models/ticket");
+const Ticket = require("../../../models/ticket");
 const mongoose = require("mongoose");
 
 const ticket_index = (req, res) => {

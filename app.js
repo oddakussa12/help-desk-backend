@@ -7,7 +7,12 @@ const cors = require("cors");
 const dbConfig = require("./config/db.config.js");
 const cookieParser = require('cookie-parser');
 
-const blogRoutes = require('./routes/blogRoutes');
+// admin routes
+// support user routes
+// end user routes
+// public routes
+
+
 const ticketRoutes = require('./routes/ticketRoutes');
 const authRoutes = require('./routes/authRoutes');
 const ticketStatusRoutes = require('./routes/ticketStatusRoutes');
@@ -62,18 +67,9 @@ app.use(cors(corsOptions));
 
 // routes
 app.get('*', checkUser);
-app.get('/', (req, res) => {
-  res.redirect('/blogs');
-});
 
-app.get('/about', requireAuth, (req, res) => {
-  res.render('about', { title: 'About' });
-});
-
-
-app.use('/blogs', blogRoutes);
-app.use('/api/user/tickets', requireAuth,checkUser, ticketRoutes);
 app.use(authRoutes);
+app.use('/api/user/tickets', requireAuth,checkUser, ticketRoutes);
 app.use('/ticket-status', ticketStatusRoutes);
 app.use('/api/admin/support-level', supportLevelRoutes);
 app.use('/api/admin/faqs', checkUser, faqRoutes);
@@ -84,6 +80,6 @@ app.use('/api/admin/roles', roleRoutes);
 app.use('/api/admin/ticket-priority', ticketPriority);
 
 // 404 page
-app.use((req, res) => {
-  res.status(404).render('404', { title: '404' });
+app.use((req, res, next) => {
+  res.status(404).json('Sorry, the api you requested does not exist.');
 });

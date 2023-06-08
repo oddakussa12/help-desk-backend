@@ -8,7 +8,6 @@ const ticket_index = (req, res) => {
     .populate("created_by", "name")
     .populate("status", "name")
     .populate("priority", "name")
-    // Ticket.find().sort({ createdAt: -1 })
     .then((result) => {
       res.json(result);
     })
@@ -21,6 +20,7 @@ const ticket_details = (req, res) => {
   const id = req.params.id;
   Ticket.findById(id)
     .populate("status", "name")
+    .populate("assignee", "name")
     .populate("priority", "name")
     .populate("created_by", "name")
     .then((result) => {

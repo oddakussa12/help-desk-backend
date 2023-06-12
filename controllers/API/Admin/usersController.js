@@ -105,28 +105,20 @@ const destroy = (req, res) => {
 
 const users_by_role = async (req, res) => {
   const role = req.params.role;
-
-  await Role.aggregate([
-    {
-      $match: {
-        name: role,
-      },
-    },
-    {
-      $lookup: {
-        from: "users",
-        localField: "_id",
-        foreignField: "role",
-        as: "users",
-      },
-    },
-  ])
-    .then((result) => {
-      res.json(result);
-    })
-    .catch((err) => {
-      res.json(err);
-    });
+  try {
+    await User.find()
+      .populate("role")
+      .exec((err, users) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        const usersByRole = users.filter((user) => user.role.name === role);
+        res.json(usersByRole);
+      });
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 module.exports = {

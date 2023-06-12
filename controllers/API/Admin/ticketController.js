@@ -124,6 +124,30 @@ const ticket_delete = (req, res) => {
     });
 };
 
+const assign_support = async (req, res) => {
+  const ticket_id = req.params.ticket_id;
+  const user_id = req.body.user_id;
+
+  try {
+    Ticket.findOneAndUpdate(
+      {
+        _id: ticket_id /* replace with the ID of your ticket document */,
+      },
+      { assignee: user_id },
+      { new: true },
+      (err, ticket) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        res.json({ message: "Ticket assigned." });
+      }
+    );
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = {
   ticket_index,
   ticket_details,
@@ -132,4 +156,5 @@ module.exports = {
   ticket_update,
   created_by_me,
   assigned_to_me,
+  assign_support,
 };

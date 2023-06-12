@@ -10,5 +10,6 @@ router.delete("/:id", ticketController.ticket_delete);
 router.patch("/:id", ticketController.ticket_update);
 router.get("/created_by_me", ticketController.created_by_me);
 router.get("/assigned_to_me", ticketController.assigned_to_me);
+router.post("/assign/:ticket_id", ticketController.assign_support);
 
 module.exports = router;

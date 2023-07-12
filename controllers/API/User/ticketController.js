@@ -21,6 +21,7 @@ const ticket_details = (req, res) => {
   const id = req.params.id;
   Ticket.findById(id)
     .populate("status", "name")
+    .populate("assignee", "name")
     .populate("priority", "name")
     .populate("created_by", "name")
     .then((result) => {
@@ -31,17 +32,6 @@ const ticket_details = (req, res) => {
       res.send("Error: " + err);
     });
 };
-
-// const ticket_create_post = (req, res) => {
-//   const ticket = new Ticket(req.body);
-//   ticket.save()
-//     .then(result => {
-//       res.json(result)
-//     })
-//     .catch(err => {
-//       res.send("Error: " + err);
-//     });
-// }
 
 const ticket_create_post = async (req, res) => {
   const ticket = new Ticket({

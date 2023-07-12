@@ -74,7 +74,6 @@ const created_by_me = async (req, res) => {
 };
 
 const assigned_to_me = async (req, res) => {
-  console.log("You have reached here again");
   const auth_user_id = res.locals.user._id;
   var condition = auth_user_id
     ? { assignee: mongoose.Types.ObjectId(auth_user_id) }

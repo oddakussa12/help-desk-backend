@@ -18,11 +18,15 @@ const adminUserRoutes = require("./routes/admin/userRoutes.js");
 const adminTicketRoute = require("./routes/admin/ticketRoutes.js");
 
 // support user routes
+const supportTicketRoute = require("./routes/support/ticketRoute.js");
+const supportBaseDataRoute = require("./routes/support/baseDataRoute.js");
+const supportFaqRoute = require("./routes/support/faqRoute.js");
 
 // end user routes
 const userTicketRoutes = require("./routes/user/ticketRoutes.js");
 
 // public routes
+const worldFaqRoute = require("./routes/world/faqRoute.js");
 
 // auth routes
 const authRoutes = require("./routes/auth/authRoutes.js");
@@ -86,11 +90,16 @@ app.use("/api/admin/faqs", checkUser, adminFaqRoutes);
 app.use("/api/admin/tickets", checkUser, adminTicketRoute);
 
 // support user endpoints
+app.use("/api/support/tickets", checkUser, supportTicketRoute);
+app.use("/api/support/base-data", checkUser, supportBaseDataRoute);
+app.use("/api/support/faqs", requireAuth, checkUser, supportFaqRoute);
 
 // end user endpoints
 app.use("/api/user/tickets", requireAuth, checkUser, userTicketRoutes);
 
 // public endpoints
+app.use("/api/faqs", worldFaqRoute);
+
 
 // 404
 app.use((req, res, next) => {

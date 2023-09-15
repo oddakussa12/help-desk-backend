@@ -57,7 +57,7 @@ const reply = async (req, res) => {
 };
 
 const dashboard = async (req, res) => {
-  const auth_user_id = res.locals.user._id;
+  const auth_user_id = res.locals?.user?._id;
 
   const [ticketCounts, totalTicketsAssignedToUser] = await Promise.all(
     [
@@ -99,10 +99,32 @@ const dashboard = async (req, res) => {
   res.json(response);
 };
 
+const change_status = (req, res) => {
+  const ticket_id = req.params.ticket_id;
+  const status_id = req.body.status_id;
+
+  console.log(ticket_id, status_id);
+
+  Ticket.findByIdAndUpdate(
+    ticket_id,
+    { status: status_id },
+    { new: true },
+    function (err, ticket) {
+      if (err) {
+        // Handle error
+        console.log(err);
+      } else {
+        // Send the updated ticket document back to the client
+        res.json(ticket);
+      }
+    }
+  );
+}
+
 module.exports = {
   ticket_details,
   assigned_to_me,
   reply,
-  dashboard
-  //   change_status,
+  dashboard,
+  change_status,
 };

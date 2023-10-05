@@ -57,7 +57,6 @@ module.exports.signup_post = async (req, res) => {
   try {
     let user = await User.create(req.body);
     user = await user.populate("role").execPopulate();
-    console.log(user);
     const access_token = createToken(user._id);
     const refresh_token = createRefreshToken(user._id);
     await RefreshToken.create({ refresh_token });

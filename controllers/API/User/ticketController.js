@@ -8,6 +8,7 @@ const ticket_index = (req, res) => {
     .populate("created_by", "name")
     .populate("status", "name")
     .populate("priority", "name")
+    .populate("category", "name")
     // Ticket.find().sort({ createdAt: -1 })
     .then((result) => {
       res.json(result);
@@ -55,11 +56,9 @@ const created_by_me = async (req, res) => {
   const tickets = await Ticket.find(condition)
     .sort({ createdAt: -1 })
     .populate("status", "name")
+    .populate("category", "name")
     .populate("priority", "name");
 
-  if (tickets.length === 0) {
-    return res.status(403).json({ message: "You have't created any tickets" });
-  }
   res.json(tickets);
 };
 

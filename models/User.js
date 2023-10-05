@@ -27,12 +27,17 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref:"Role",
     required:true,
-    default:"641af7cdbad1ef06875f9eda"
+    default:"6474de2e841027567ca95e35"
 
   },
   level:{
     type: mongoose.Schema.Types.ObjectId,
     ref:"SupportLevel",
+    required:false
+  },
+  issueCategory:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref:"IssueCategory",
     required:false
   },
   profile_picture:{
@@ -46,7 +51,7 @@ userSchema.pre('save', async function(next) {
   const salt = await bcrypt.genSalt();
   this.password = await bcrypt.hash(this.password, salt);
   // set default user role
-  this.role == null ? this.role = '63e4b00845c49269e5de2aa6' : null
+  this.role == null ? this.role = '6474de2e841027567ca95e35' : null
   next();
 });
 

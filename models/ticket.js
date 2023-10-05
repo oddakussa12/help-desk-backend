@@ -28,6 +28,10 @@ const ticketSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "user"
   },
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "IssueCategory"
+  },
   created_by:{
     type: mongoose.Schema.Types.ObjectId,
     ref:"user"

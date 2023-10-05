@@ -24,6 +24,7 @@ const supportFaqRoute = require("./routes/support/faqRoute.js");
 
 // end user routes
 const userTicketRoutes = require("./routes/user/ticketRoutes.js");
+const userBaseDataRoutes = require("./routes/user/baseDataRoutes.js");
 
 // public routes
 const worldFaqRoute = require("./routes/world/faqRoute.js");
@@ -96,6 +97,7 @@ app.use("/api/support/faqs", requireAuth, checkUser, supportFaqRoute);
 
 // end user endpoints
 app.use("/api/user/tickets", requireAuth, checkUser, userTicketRoutes);
+app.use("/api/user/base-data", requireAuth, checkUser, userBaseDataRoutes);
 
 // public endpoints
 app.use("/api/faqs", worldFaqRoute);

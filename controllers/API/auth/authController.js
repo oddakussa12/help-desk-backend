@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 
 // handle errors
 const handleErrors = (err) => {
-  console.log(err.message, err.code);
   let errors = { email: "", password: "" };
 
   // incorrect email
@@ -25,10 +24,7 @@ const handleErrors = (err) => {
 
   // validation errors
   if (err.message.includes("user validation failed")) {
-    // console.log(err);
     Object.values(err.errors).forEach(({ properties }) => {
-      // console.log(val);
-      // console.log(properties);
       errors[properties.path] = properties.message;
     });
   }
@@ -81,7 +77,6 @@ module.exports.login_post = async (req, res) => {
 
   try {
     const user = await User.login(phone_number, password);
-    console.log(user);
     const access_token = createToken(user._id);
     const refresh_token = createRefreshToken(user._id);
     await RefreshToken.create({ refresh_token });

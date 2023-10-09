@@ -3,7 +3,6 @@ const Role = require("../../../models/Role");
 
 // handle errors
 const handleErrors = (err) => {
-  console.log(err.message, err.code);
   let errors = { email: "", password: "" };
 
   // incorrect email
@@ -24,10 +23,7 @@ const handleErrors = (err) => {
 
   // validation errors
   if (err.message.includes("user validation failed")) {
-    // console.log(err);
     Object.values(err.errors).forEach(({ properties }) => {
-      // console.log(val);
-      // console.log(properties);
       errors[properties.path] = properties.message;
     });
   }
@@ -49,14 +45,11 @@ const index = (req, res) => {
 };
 
 const store = async (req, res) => {
-  console.log("this is the body");
-  console.log(req.body);
   // const user_data =  { ...req.body, profile_picture: process.env.BASE_URL+req.file.path };
   const user_data = req.body;
 
   try {
     const user = await User.create(user_data);
-    console.log(user);
     res.json(user);
   } catch (err) {
     const errors = handleErrors(err);
@@ -110,7 +103,6 @@ const users_by_role = async (req, res) => {
       .populate("role")
       .exec((err, users) => {
         if (err) {
-          console.log(err);
           return;
         }
         const usersByRole = users.filter((user) => user.role.name === role);

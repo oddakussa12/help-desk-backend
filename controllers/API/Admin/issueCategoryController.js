@@ -5,7 +5,6 @@ const index = async (req, res) => {
   const latest_category = await IssueCategory.findOne({}).sort({
     createdAt: -1,
   });
-  console.log(latest_category);
   const faqs = await FAQ.find({ category_id: latest_category._id }).catch(
     (err) => {
       res.status(404).json({ Error: err });

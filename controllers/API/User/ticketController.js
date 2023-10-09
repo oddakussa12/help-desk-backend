@@ -1,4 +1,5 @@
 const Ticket = require("../../../models/ticket");
+const User = require("../../../models/User");
 const mongoose = require("mongoose");
 
 const ticket_index = (req, res) => {
@@ -34,15 +35,39 @@ const ticket_details = (req, res) => {
     });
 };
 
+async function findSupportUser(issueCategory) {
+  try {
+    const supportUser = await User.findOne({
+      role: { $in: ['6474de39841027567ca95e38'] },
+      issueCategory: issueCategory,
+    }).populate('role');
+    return supportUser;
+  } catch (error) {
+    throw new Error('Failed to find support user');
+  }
+}
+
 const ticket_create_post = async (req, res) => {
-  const ticket = new Ticket({
+  const newTicket = new Ticket({
     ...req.body,
     created_by: res.locals.user._id,
   });
 
   try {
-    const result = await ticket.save();
-    res.json(result);
+    // Find the suitable support user
+    findSupportUser(newTicket.category)
+      .then((supportUser) => {
+        // Assign the ticket to the support user
+        newTicket.assignee = supportUser?._id;
+        // Save the ticket
+        return newTicket.save();
+      })
+      .then((savedTicket) => {
+        res.json(savedTicket);
+      })
+      .catch((error) => {
+        console.error('Error assigning ticket:', error);
+      });
   } catch (err) {
     res.status(500).send({ error: "Error " + err });
   }
@@ -63,7 +88,6 @@ const created_by_me = async (req, res) => {
 };
 
 const assigned_to_me = async (req, res) => {
-  console.log("You have reached here again");
   const auth_user_id = res.locals.user._id;
   var condition = auth_user_id
     ? { assignee: mongoose.Types.ObjectId(auth_user_id) }

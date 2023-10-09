@@ -103,8 +103,6 @@ const change_status = (req, res) => {
   const ticket_id = req.params.ticket_id;
   const status_id = req.body.status_id;
 
-  console.log(ticket_id, status_id);
-
   Ticket.findByIdAndUpdate(
     ticket_id,
     { status: status_id },

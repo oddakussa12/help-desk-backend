@@ -1,5 +1,4 @@
 const User = require("../../../models/User");
-const Role = require("../../../models/Role");
 
 // handle errors
 const handleErrors = (err) => {

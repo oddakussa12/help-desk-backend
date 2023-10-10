@@ -16,6 +16,7 @@ const ticketPriority = require("./routes/admin/ticketPriorityRoutes.js");
 const adminFaqRoutes = require("./routes/admin/faqRoutes.js");
 const adminUserRoutes = require("./routes/admin/userRoutes.js");
 const adminTicketRoute = require("./routes/admin/ticketRoutes.js");
+const adminProfileRoute = require("./routes/admin/profileRoutes.js");
 
 // support user routes
 const supportTicketRoute = require("./routes/support/ticketRoute.js");
@@ -89,6 +90,7 @@ app.use("/api/admin/ticket-status", adminTicketStatusRoutes);
 app.use("/api/admin/issue-category", adminIssueCategoryRoutes);
 app.use("/api/admin/faqs", checkUser, adminFaqRoutes);
 app.use("/api/admin/tickets", checkUser, adminTicketRoute);
+app.use("/api/admin/profile", checkUser, adminProfileRoute);
 
 // support user endpoints
 app.use("/api/support/tickets", checkUser, supportTicketRoute);

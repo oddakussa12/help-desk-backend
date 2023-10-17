@@ -1,5 +1,6 @@
 const User = require("../../../models/User");
 const Ticket = require('../../../models/ticket');
+const mongoose = require("mongoose");
 
 
 const user_count = async (req, res) => {
@@ -83,7 +84,77 @@ const getTicketStatusCounts = async (req, res) => {
     console.error(error);
   }
 }
+
+const supportPerformance = async (req, res) => {
+  User.aggregate([
+    {
+      $lookup: {
+        from: 'tickets',
+        localField: '_id',
+        foreignField: 'assignee',
+        as: 'tickets'
+      }
+    },
+    {
+      $lookup: {
+        from: 'roles',
+        localField: 'role',
+        foreignField: '_id',
+        as: 'roleInfo'
+      }
+    },
+    {
+      $lookup: {
+        from: 'ticketstatuses',
+        localField: 'tickets.status',
+        foreignField: '_id',
+        as: 'statusInfo'
+      }
+    },
+  
+    {
+      $unwind: {
+        path: '$roleInfo',
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    { $unwind: { path: '$statusInfo', preserveNullAndEmptyArrays: true } },
+    {
+      $group: {
+        _id: '$_id',
+        supportPersonName: { $first: '$name' },
+        supportPersonRole: { $first: '$roleInfo.name' },
+        closedCount: {
+          $sum: {
+            $cond: [{ $eq: ['$statusInfo.name', 'Closed'] }, 1, 0]
+          }
+        },
+        pendingCount: {
+          $sum: {
+            $cond: [{ $eq: ['$statusInfo.name', 'Pending'] }, 1, 0]
+          }
+        },
+        openCount: {
+          $sum: {
+            $cond: [{ $eq: ['$statusInfo.name', 'Open'] }, 1, 0]
+          }
+        },
+        totalCount: { $sum: { $size: '$tickets' } }
+      }
+    }
+  ])
+    .exec((err, results) => {
+      if (err) {
+        // Handle the error
+      } else {
+        // Process the results
+        res.json(results);
+      }
+    });
+
+}
 module.exports = {
-    user_count,
-    getTicketStatusCounts
+  user_count,
+  getTicketStatusCounts,
+  supportPerformance
 };

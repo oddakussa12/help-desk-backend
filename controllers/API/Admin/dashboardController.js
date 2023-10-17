@@ -1,4 +1,6 @@
 const User = require("../../../models/User");
+const Ticket = require('../../../models/ticket');
+
 
 const user_count = async (req, res) => {
   try {
@@ -48,6 +50,40 @@ const user_count = async (req, res) => {
   }
 }
 
+const getTicketStatusCounts = async (req, res) => {
+  try {
+    const counts = await Ticket.aggregate([
+      {
+        $lookup: {
+          from: 'ticketstatuses',
+          localField: 'status',
+          foreignField: '_id',
+          as: 'statusInfo'
+        }
+      },
+      {
+        $group: {
+          _id: '$status',
+          status: { $first: { $arrayElemAt: ['$statusInfo', 0] } },
+          count: { $sum: 1 }
+        }
+      }
+    ]);
+
+    const ticketStatusCounts = {};
+
+    counts.forEach((item) => {
+      const statusName = item.status.name;
+      const count = item.count;
+      ticketStatusCounts[statusName] = count;
+    });
+
+    res.json(ticketStatusCounts);
+  } catch (error) {
+    console.error(error);
+  }
+}
 module.exports = {
-    user_count
+    user_count,
+    getTicketStatusCounts
 };

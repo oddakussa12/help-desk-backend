@@ -5,5 +5,6 @@ const router = express.Router();
 
 router.get("/", profileController.show);
 router.patch('/', profileController.update);
+router.post('/update-password', profileController.update_password);
 
 module.exports = router;

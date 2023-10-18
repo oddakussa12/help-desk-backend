@@ -1,7 +1,5 @@
 const User = require("../../../models/User");
 const Ticket = require('../../../models/ticket');
-const mongoose = require("mongoose");
-
 
 const user_count = async (req, res) => {
   try {
@@ -118,6 +116,12 @@ const supportPerformance = async (req, res) => {
         preserveNullAndEmptyArrays: true
       }
     },
+    {
+      $match: {
+        'roleInfo.name': 'Support'
+      }
+    },
+  
     { $unwind: { path: '$statusInfo', preserveNullAndEmptyArrays: true } },
     {
       $group: {

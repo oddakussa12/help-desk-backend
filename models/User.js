@@ -23,31 +23,31 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Please enter a password'],
     minlength: [6, 'Minimum password length is 6 characters'],
   },
-  role:{
+  role: {
     type: mongoose.Schema.Types.ObjectId,
-    ref:"Role",
-    required:true,
-    default:"6474de2e841027567ca95e35"
+    ref: "Role",
+    required: true,
+    default: "6474de2e841027567ca95e35"
 
   },
-  level:{
+  level: {
     type: mongoose.Schema.Types.ObjectId,
-    ref:"SupportLevel",
-    required:false
+    ref: "SupportLevel",
+    required: false
   },
-  issueCategory:{
+  issueCategory: {
     type: mongoose.Schema.Types.ObjectId,
-    ref:"IssueCategory",
-    required:false
+    ref: "IssueCategory",
+    required: false
   },
-  profile_picture:{
-    type:String,
+  profile_picture: {
+    type: String,
   }
 }, { timestamps: true });
 
 
 // fire a function before doc saved to db
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function (next) {
   const salt = await bcrypt.genSalt();
   this.password = await bcrypt.hash(this.password, salt);
   // set default user role
@@ -55,10 +55,18 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
+userSchema.methods.comparePassword = async function (password) {
+  try {
+    return await bcrypt.compare(password, this.password);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 // static method to login user
-userSchema.statics.login = async function(phone_number, password) {
+userSchema.statics.login = async function (phone_number, password) {
   const phone = phone_number;
-  const user = await this.findOne({ phone }).populate('role','name');
+  const user = await this.findOne({ phone }).populate('role', 'name');
   if (user) {
     const auth = await bcrypt.compare(password, user.password);
     if (auth) {

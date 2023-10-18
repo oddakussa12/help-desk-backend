@@ -43,18 +43,14 @@ const update_password = async (req, res) => {
       const isOldPasswordValid = await user.comparePassword(req?.body?.old_password);
       if (!isOldPasswordValid) {
         // throw new Error('Invalid old password');
-        res.json({
-          "message": "Invalid old password",
-          "status": "Error",
-          "code": "500"
+        res.status(400).json({
+          message: "Invalid old password",
         });
       }
       // Validate the new password and confirm password
       if (req?.body?.new_password !== req?.body?.confirm_password) {
-        res.json({
-          "message": "New password and confirm password do not match",
-          "status": "Error",
-          "code": "500"
+        res.status(400).json({
+          message: "New password and confirm password do not match",
         });
       }
       // Update the user's password
@@ -63,7 +59,9 @@ const update_password = async (req, res) => {
       res.json(user);
     }
   } catch (error) {
-    console.error('Error updating password:', error.message);
+    res.status(400).json({
+      message: error.message,
+    });
   }
 };
 

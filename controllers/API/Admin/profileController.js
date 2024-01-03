@@ -11,7 +11,6 @@ const show = async (req, res) => {
 const update = (req, res) => {
   if (req.body.constructor === Object && Object.keys(req.body).length !== 0) {
     const id = res.locals.user._id;
-    console.log("Auth user id", id);
 
     User.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
       .then((data) => {

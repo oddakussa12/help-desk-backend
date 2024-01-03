@@ -2,12 +2,10 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 const requireAuth = (req, res, next) => {
-    const authToken = req.headers.authorization;
+    const authToken =  req.cookies.access_token;
 
     if(authToken){
-        const token = authToken.split(" ")[1];
-
-        jwt.verify(token, 'help desk secret', (err, user) => {
+        jwt.verify(authToken, 'help desk secret', (err, user) => {
             if(err){
                 return res.status(403).json(err);
             }else{
@@ -16,16 +14,15 @@ const requireAuth = (req, res, next) => {
             }
         })
     }else{
-        res.status(401).json({ message: "you are not authenticated" });
+        res.status(401).json({ message: "You are not authenticated, Invalid cookie." });
     }
 }
 
 const checkUser = (req, res, next) => {
-    const authToken = req.headers.authorization;
-    if(authToken){
-        const token = authToken.split(" ")[1];
+    const authToken =  req.cookies.access_token;
 
-        jwt.verify(token, 'help desk secret', async (err, decodedToken) => {
+    if(authToken){
+        jwt.verify(authToken, 'help desk secret', async (err, decodedToken) => {
             if(err){
                 res.locals.user = null;
                 next();

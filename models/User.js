@@ -64,9 +64,8 @@ userSchema.methods.comparePassword = async function (password) {
 };
 
 // static method to login user
-userSchema.statics.login = async function (phone_number, password) {
-  const phone = phone_number;
-  const user = await this.findOne({ phone }).populate('role', 'name');
+userSchema.statics.login = async function (email, password) {
+  const user = await this.findOne({ email }).populate('role', 'name');
   if (user) {
     const auth = await bcrypt.compare(password, user.password);
     if (auth) {

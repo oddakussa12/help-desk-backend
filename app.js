@@ -83,21 +83,21 @@ app.get("*", checkUser);
 app.use("/api/auth", authRoutes);
 
 // admin endpoints
-app.use("/api/admin/users", adminUserRoutes);
-app.use("/api/admin/roles", adminRoleRoutes);
-app.use("/api/admin/ticket-priority", ticketPriority);
-app.use("/api/admin/support-level", adminSupportLevelRoutes);
-app.use("/api/admin/ticket-status", adminTicketStatusRoutes);
-app.use("/api/admin/issue-category", adminIssueCategoryRoutes);
-app.use("/api/admin/faqs", checkUser, adminFaqRoutes);
-app.use("/api/admin/tickets", checkUser, adminTicketRoute);
-app.use("/api/admin/profile", checkUser, adminProfileRoute);
-app.use("/api/admin/dashboard", checkUser, adminDashboardRoute);
+app.use("/api/admin/users", requireAuth, checkUser, adminUserRoutes);
+app.use("/api/admin/roles", requireAuth, checkUser, adminRoleRoutes);
+app.use("/api/admin/ticket-priority", requireAuth, checkUser, ticketPriority);
+app.use("/api/admin/support-level", requireAuth, checkUser, adminSupportLevelRoutes);
+app.use("/api/admin/ticket-status", requireAuth, checkUser, adminTicketStatusRoutes);
+app.use("/api/admin/issue-category", requireAuth, checkUser, adminIssueCategoryRoutes);
+app.use("/api/admin/faqs", requireAuth, checkUser, adminFaqRoutes);
+app.use("/api/admin/tickets", requireAuth, checkUser, adminTicketRoute);
+app.use("/api/admin/profile", requireAuth, checkUser, adminProfileRoute);
+app.use("/api/admin/dashboard", requireAuth, checkUser, adminDashboardRoute);
 
 
 // support user endpoints
-app.use("/api/support/tickets", checkUser, supportTicketRoute);
-app.use("/api/support/base-data", checkUser, supportBaseDataRoute);
+app.use("/api/support/tickets", requireAuth, checkUser, supportTicketRoute);
+app.use("/api/support/base-data", requireAuth, checkUser, supportBaseDataRoute);
 app.use("/api/support/faqs", requireAuth, checkUser, supportFaqRoute);
 
 // end user endpoints

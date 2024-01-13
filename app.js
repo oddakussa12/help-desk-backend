@@ -27,6 +27,7 @@ const supportFaqRoute = require("./routes/support/faqRoute.js");
 // end user routes
 const userTicketRoutes = require("./routes/user/ticketRoutes.js");
 const userBaseDataRoutes = require("./routes/user/baseDataRoutes.js");
+const userComplainRoutes = require("./routes/user/complainRoutes.js");
 
 // public routes
 const worldFaqRoute = require("./routes/world/faqRoute.js");
@@ -82,7 +83,7 @@ app.get("*", checkUser);
 // auth endpoints
 app.use("/api/auth", authRoutes);
 
-// admin endpoints
+// admin role endpoints
 app.use("/api/admin/users", requireAuth, checkUser, adminUserRoutes);
 app.use("/api/admin/roles", requireAuth, checkUser, adminRoleRoutes);
 app.use("/api/admin/ticket-priority", requireAuth, checkUser, ticketPriority);
@@ -95,14 +96,15 @@ app.use("/api/admin/profile", requireAuth, checkUser, adminProfileRoute);
 app.use("/api/admin/dashboard", requireAuth, checkUser, adminDashboardRoute);
 
 
-// support user endpoints
+// support role endpoints
 app.use("/api/support/tickets", requireAuth, checkUser, supportTicketRoute);
 app.use("/api/support/base-data", requireAuth, checkUser, supportBaseDataRoute);
 app.use("/api/support/faqs", requireAuth, checkUser, supportFaqRoute);
 
-// end user endpoints
+// user role endpoints
 app.use("/api/user/tickets", requireAuth, checkUser, userTicketRoutes);
 app.use("/api/user/base-data", requireAuth, checkUser, userBaseDataRoutes);
+app.use("/api/user/complains", requireAuth, checkUser, userComplainRoutes);
 
 // public endpoints
 app.use("/api/faqs", worldFaqRoute);

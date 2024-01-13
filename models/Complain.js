@@ -10,9 +10,18 @@ const complainSchema = new Schema({
   response: {
     type: String,
   },
+  created_by:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref:"user"
+  },
+  assigne: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref:"user"
+  },
   ticket: {
     type: mongoose.Schema.Types.ObjectId,
-    ref:"Ticket"
+    ref:"Ticket",
+    required: true
   }
 }, { timestamps: true });
 

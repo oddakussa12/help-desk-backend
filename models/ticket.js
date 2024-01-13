@@ -35,7 +35,12 @@ const ticketSchema = new Schema({
   created_by:{
     type: mongoose.Schema.Types.ObjectId,
     ref:"user"
+  },
+  complain:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref:"Complain"
   }
+
 }, { timestamps: true });
 
 // Set up the pre-save middleware for the Ticket model

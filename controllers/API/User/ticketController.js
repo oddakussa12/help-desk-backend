@@ -2,29 +2,13 @@ const Ticket = require("../../../models/ticket");
 const User = require("../../../models/User");
 const mongoose = require("mongoose");
 
-const ticket_index = (req, res) => {
-  Ticket.find()
-    .sort({ createdAt: -1 })
-    .populate("assignee", "name")
-    .populate("created_by", "name")
-    .populate("status", "name")
-    .populate("priority", "name")
-    .populate("category", "name")
-    // Ticket.find().sort({ createdAt: -1 })
-    .then((result) => {
-      res.json(result);
-    })
-    .catch((err) => {
-      res.send("Error: " + err);
-    });
-};
-
 const ticket_details = (req, res) => {
   const id = req.params.id;
   Ticket.findById(id)
     .populate("status", "name")
     .populate("assignee", "name")
     .populate("priority", "name")
+    .populate("complain")
     .populate("created_by", "name")
     .then((result) => {
       res.send(result);
@@ -83,6 +67,7 @@ const created_by_me = async (req, res) => {
     .sort({ createdAt: -1 })
     .populate("status", "name")
     .populate("category", "name")
+    .populate("complain")
     .populate("priority", "name");
 
   res.json(tickets);
@@ -124,7 +109,6 @@ const ticket_delete = (req, res) => {
 };
 
 module.exports = {
-  ticket_index,
   ticket_details,
   ticket_create_post,
   ticket_delete,

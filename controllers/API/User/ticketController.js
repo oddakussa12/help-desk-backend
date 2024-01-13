@@ -74,7 +74,8 @@ const ticket_create_post = async (req, res) => {
 };
 
 const created_by_me = async (req, res) => {
-  const auth_user_id = res.locals.user._id;
+  // console.log("......................res.locals.user", res?.locals?.user);
+  const auth_user_id = res?.locals?.user?._id;
   var condition = auth_user_id
     ? { created_by: mongoose.Types.ObjectId(auth_user_id) }
     : {};
@@ -84,21 +85,6 @@ const created_by_me = async (req, res) => {
     .populate("category", "name")
     .populate("priority", "name");
 
-  res.json(tickets);
-};
-
-const assigned_to_me = async (req, res) => {
-  const auth_user_id = res.locals.user._id;
-  var condition = auth_user_id
-    ? { assignee: mongoose.Types.ObjectId(auth_user_id) }
-    : {};
-  const tickets = await Ticket.find(condition);
-
-  if (tickets.length === 0) {
-    return res
-      .status(403)
-      .json({ message: "You have't assigned to any tickets" });
-  }
   res.json(tickets);
 };
 
@@ -144,5 +130,4 @@ module.exports = {
   ticket_delete,
   ticket_update,
   created_by_me,
-  assigned_to_me,
 };

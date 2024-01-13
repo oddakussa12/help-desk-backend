@@ -46,37 +46,6 @@ const ticket_create_post = async (req, res) => {
   }
 };
 
-const created_by_me = async (req, res) => {
-  const auth_user_id = res.locals.user._id;
-  var condition = auth_user_id
-    ? { created_by: mongoose.Types.ObjectId(auth_user_id) }
-    : {};
-  const tickets = await Ticket.find(condition)
-    .sort({ createdAt: -1 })
-    .populate("status", "name")
-    .populate("priority", "name");
-
-  if (tickets.length === 0) {
-    return res.status(403).json({ message: "You have't created any tickets" });
-  }
-  res.json(tickets);
-};
-
-const assigned_to_me = async (req, res) => {
-  const auth_user_id = res.locals.user._id;
-  var condition = auth_user_id
-    ? { assignee: mongoose.Types.ObjectId(auth_user_id) }
-    : {};
-  const tickets = await Ticket.find(condition);
-
-  if (tickets.length === 0) {
-    return res
-      .status(403)
-      .json({ message: "You have't assigned to any tickets" });
-  }
-  res.json(tickets);
-};
-
 const ticket_update = (req, res) => {
   if (req.body.constructor === Object && Object.keys(req.body).length !== 0) {
     const id = req.params.id;
@@ -142,7 +111,5 @@ module.exports = {
   ticket_create_post,
   ticket_delete,
   ticket_update,
-  created_by_me,
-  assigned_to_me,
   assign_support
 };

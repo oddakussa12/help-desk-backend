@@ -22,6 +22,10 @@ const complainSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref:"Ticket",
     required: true
+  },
+  status:{
+    type:String,
+    default: 'Open'
   }
 }, { timestamps: true });
 

@@ -58,7 +58,6 @@ const ticket_create_post = async (req, res) => {
 };
 
 const created_by_me = async (req, res) => {
-  // console.log("......................res.locals.user", res?.locals?.user);
   const auth_user_id = res?.locals?.user?._id;
   var condition = auth_user_id
     ? { created_by: mongoose.Types.ObjectId(auth_user_id) }

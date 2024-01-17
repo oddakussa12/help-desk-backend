@@ -23,6 +23,7 @@ const adminDashboardRoute = require("./routes/admin/dashboardRoutes.js");
 const supportTicketRoute = require("./routes/support/ticketRoute.js");
 const supportBaseDataRoute = require("./routes/support/baseDataRoute.js");
 const supportFaqRoute = require("./routes/support/faqRoute.js");
+const supportComplainRoute = require("./routes/support/complainRoute.js");
 
 // end user routes
 const userTicketRoutes = require("./routes/user/ticketRoutes.js");
@@ -100,6 +101,7 @@ app.use("/api/admin/dashboard", requireAuth, checkUser, adminDashboardRoute);
 app.use("/api/support/tickets", requireAuth, checkUser, supportTicketRoute);
 app.use("/api/support/base-data", requireAuth, checkUser, supportBaseDataRoute);
 app.use("/api/support/faqs", requireAuth, checkUser, supportFaqRoute);
+app.use("/api/support/complains", requireAuth, checkUser, supportComplainRoute);
 
 // user role endpoints
 app.use("/api/user/tickets", requireAuth, checkUser, userTicketRoutes);

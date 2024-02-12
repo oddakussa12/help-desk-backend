@@ -1,22 +1,27 @@
+const Complain = require("../../../models/Complain");
 const Ticket = require("../../../models/ticket");
 const User = require("../../../models/User");
 const mongoose = require("mongoose");
 
-const ticket_details = (req, res) => {
-  const id = req.params.id;
-  Ticket.findById(id)
-    .populate("status", "name")
-    .populate("assignee", "name")
-    .populate("priority", "name")
-    .populate("complain")
-    .populate("created_by", "name")
-    .then((result) => {
-      res.send(result);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.send("Error: " + err);
-    });
+const ticket_details = async (req, res) => {
+  try {
+    const ticket_id = req.params.id;
+    const condition = ticket_id ? { ticket: mongoose.Types.ObjectId(ticket_id) } : {};
+
+    const complain = await Complain.findOne(condition);
+
+    const result = await Ticket.findById(ticket_id)
+      .populate("status", "name")
+      .populate("assignee", "name")
+      .populate("priority", "name")
+      .populate("created_by", "name");
+
+    const finalResult = Object.assign({}, result._doc, { complain: complain });
+
+    return res.status(200).json({ data: finalResult, message: "Ticket showed successfully." });
+  } catch (err) {
+    res.send("Error: " + err);
+  }
 };
 
 async function findSupportUser(issueCategory) {
@@ -66,7 +71,6 @@ const created_by_me = async (req, res) => {
     .sort({ createdAt: -1 })
     .populate("status", "name")
     .populate("category", "name")
-    .populate("complain")
     .populate("priority", "name");
 
   res.json(tickets);
